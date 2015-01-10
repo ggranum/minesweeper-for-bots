@@ -1,0 +1,146 @@
+<!--
+    @license
+    Copyright (c) 2014 Geoff M. Granum. Released under the [MIT license](http://choosealicense.com/licenses/mit/).
+    @author Geoff M. Granum
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../core-icon-button/core-icon-button.html">
+<link rel="import" href="../core-transition/core-transition.html">
+<link rel="import" href="../core-overlay/core-overlay.html">
+<link rel="import" href="./minesweeper-for-bots-cell.html">
+
+<!--
+
+A simple Minesweeper clone, with a lax attitude towards hitting a bomb.
+
+This project exists mostly to support training an AI, which is a separate project.
+
+##### Example
+    <script src="../webcomponentsjs/webcomponents.min.js"></script>
+
+    <script src="./polyfills.js"></script>
+    <script src="./minesweeper-for-bots-core.js"></script>
+
+    <link rel="import" href="minesweeper-for-bots.html">
+    <body>
+      <div class="container" layout horizontal>
+        <minesweeper-for-bots boardSize="8" mineCount="8" flex></minesweeper-for-bots>
+      </div>
+    ...
+
+Polyfill.js fills 'Object.assign', because I'm lazy
+@element minesweeper-for-bots
+@blurb Minesweeper clone with simple UI.
+@status alpha
+@homepage https://github.com/ggranum/minesweeper-for-bots
+
+-->
+
+<style>
+  overlay-host::shadow .winner {
+    font-size: xx-large;
+    color: #00d6b2;
+    vertical-align: middle;
+    margin-top: 1em;
+  }
+
+  overlay-host::shadow .score {
+    font-weight: bold;
+  }
+</style>
+
+
+
+<polymer-element name="minesweeper-for-bots">
+  <template>
+    <style>
+      :host .score {
+        color: #00d6b2;
+        vertical-align: middle;
+        margin-top: .75em;
+        font-size: 1.2em;
+      }
+    </style>
+    <core-overlay layered backdrop opened="{{game.gameOver}}" autoCloseDisabled="false" transition="core-transition-center">
+      <div class="winner">You win!</div>
+      <div class="winner">Score: <span class="score">{{game.score}}</span></div>
+    </core-overlay>
+    <div horizontal center-justified layout>
+      <div vertical layout>
+      <div horizontal layout>
+        <div flex class="score" style="color:{{game.gameOver ? 'green' : 'black'}};">{{game.score}}</div>
+        <div flex horizontal layout center-justified><core-icon-button icon="polymer" on-click="{{newGameAction}}"></core-icon-button></div>
+        <div flex>&nbsp;</div>
+      </div>
+
+      <div center-justified vertical layout >
+        <template id="game_grid" repeat="{{row in rows}}">
+          <div horizontal layout style="margin:0;padding:0">
+            <template repeat="{{cell in row}}">
+                <ms4bots-cell cell="{{cell}}" style="margin:0;padding:0"></ms4bots-cell>
+            </template>
+          </div>
+        </template>
+      </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    (function () {
+      Polymer({
+
+        game: undefined,
+        rows: undefined,
+
+        publish: {
+          boardSize: undefined,
+          mineCount: undefined
+        },
+
+        observe: {
+          'game.gameOver': 'gameEndedOrNewGame'
+        },
+
+        created: function () {
+          this.rows = [];
+          this.boardSize = 10;
+          this.mineCount = 10;
+          this.disabled = false;
+        },
+
+        ready: function () {
+          this.newGame();
+        },
+
+
+        gameEndedOrNewGame: function(current, previous){
+          this.disabled = true;
+        },
+
+        newGameAction: function(){
+          this.async(this.destroyGame);
+
+        },
+
+        destroyGame: function(){
+          this.game.gozer();
+          this.rows = [];
+          this.newGame();
+        },
+
+        newGame: function(name){
+          this.game = new Ms4BotsGame({boardSize: this.boardSize, mineCount: this.mineCount});
+          this.game.grid.forEach(function (cell) {
+            if (!this.rows[cell.row]) {
+              this.rows[cell.row] = [];
+            }
+            this.rows[cell.row][cell.col] = cell;
+          }, this);
+        }
+      });
+
+    })();
+  </script>
+</polymer-element>

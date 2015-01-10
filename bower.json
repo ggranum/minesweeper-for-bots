@@ -1,0 +1,7 @@
+{
+  "name": "minesweeper-for-bots#gh-pages",
+  "private": true,
+  "dependencies": {
+    "minesweeper-for-bots": "ggranum/minesweeper-for-bots#master"
+  }
+}

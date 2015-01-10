@@ -1,0 +1,51 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../core-icons/core-icons.html">
+<link rel="import" href="../core-icon-button/core-icon-button.html">
+
+<polymer-element name="ms4bots-cell">
+
+  <template>
+    <link rel="stylesheet" href="minesweeper-for-bots-cell.css">
+
+    <template if="{{!cell.isCleared}}">
+      <core-icon raised
+                 class="ms4bots-cell"
+                 src="./default-tile-state.svg"
+                 on-click="{{cellClick}}"></core-icon>
+    </template>
+    <template if="{{cell.isCleared}}">
+      <core-icon raised
+                 class="ms4bots-cell"
+                 src="./inspected-tile-state.svg"
+                 on-click="{{cellClick}}">
+        <span class="inspected-cell-text mine-count-{{cell.isMined ? 'm' : cell.nearCount}}">{{cell.isMined ? '*' : cell.nearCount}}</span>
+      </core-icon>
+    </template>
+  </template>
+  <script>
+    (function () {
+      Polymer('ms4bots-cell', {
+
+        observe: {
+          'cell.isCleared': 'cellCleared'
+        },
+
+        publish: {
+          cell: undefined
+        },
+
+        cellClick: function (event, detail, sender) {
+          if (this.cell.isCleared) {
+            return;
+          }
+          this.async(this.inspectCell);
+        },
+
+        inspectCell: function(){
+          this.cell.inspect();
+        }
+      });
+
+    })();
+  </script>
+</polymer-element>
