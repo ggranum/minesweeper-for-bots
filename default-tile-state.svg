@@ -1,0 +1,7 @@
+<svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg">
+  <linearGradient id="default-cell-skin" gradientUnits="objectBoundingBox" x1="1" x2="1" y1="0" y2="1">
+    <stop stop-color="#BBBBBB" offset="0"/>
+    <stop stop-color="#999999" offset="0.67"/>
+  </linearGradient>
+  <rect x="0" y="0" width="20" height="20" rx="2" ry="2" fill="url(#default-cell-skin)" stroke="999999"/>
+</svg>

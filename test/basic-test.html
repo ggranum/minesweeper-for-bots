@@ -1,0 +1,42 @@
+<!--
+    @license
+    Copyright (c) 2014 Geoff M. Granum. Released under the [MIT license](http://choosealicense.com/licenses/mit/).
+
+-->
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>seed-element</title>
+
+  <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
+
+  <!-- Step 1: import the element to test -->
+  <link rel="import" href="../minesweeper-for-bots.html">
+</head>
+<body>
+
+  <!-- You use the document as a place to set up your fixtures. -->
+  <div class="container">
+    <minesweeper-for-bots boardSize="8" mineCount="8" flex></minesweeper-for-bots>
+  </div>
+
+
+  <script>
+    var ms = document.querySelector('minesweeper-for-bots');
+
+    suite('<minesweeper-for-bots>', function() {
+
+      test('Has a board size attribute.', function() {
+        assert.equal(ms.boardSize, 8);
+      });
+      test('Has a mine count attribute.', function () {
+        assert.equal(ms.mineCount, 8);
+      });
+    });
+  </script>
+
+</body>
+</html>
